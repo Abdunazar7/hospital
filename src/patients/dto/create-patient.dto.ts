@@ -1,33 +1,37 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString, IsDateString } from "class-validator";
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
 
 export class CreatePatientDto {
-  @ApiProperty({ example: 3 })
+  @ApiProperty({ example: 1, description: "Linked user ID" })
   @IsInt()
   user_id: number;
 
-  @ApiProperty({ example: "1990-05-15", required: false })
+  @ApiProperty({
+    example: "1990-03-15",
+    description: "Birth date (ISO format)",
+  })
   @IsOptional()
   @IsDateString()
-  date_of_birth?: Date;
+  birth_date?: Date;
 
-  @ApiProperty({ example: "Male", required: false })
+  @ApiProperty({ example: "MALE", description: "Gender" })
+  @IsOptional()
+  @IsEnum(["MALE", "FEMALE"])
+  gender?: "MALE" | "FEMALE";
+
+  @ApiProperty({
+    example: "Samarkand, Uzbekistan",
+    description: "Home address",
+  })
   @IsOptional()
   @IsString()
-  gender?: string;
-
-  @ApiProperty({ example: "O+", required: false })
-  @IsOptional()
-  @IsString()
-  blood_type?: string;
-
-  @ApiProperty({ example: "+998991234567", required: false })
-  @IsOptional()
-  @IsString()
-  emergency_contact?: string;
-
-  @ApiProperty({ example: "Tashkent, Uzbekistan", required: false })
-  @IsOptional()
-  @IsString()
+  @MaxLength(255)
   address?: string;
 }

@@ -1,12 +1,16 @@
 import { Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { DoctorsService } from "./doctors.service";
 import { DoctorsController } from "./doctors.controller";
+import { DoctorsService } from "./doctors.service";
 import { Doctor } from "./models/doctor.model";
 import { User } from "../users/models/user.model";
+import { Appointment } from "../appointments/models/appointment.model";
+import { MedicalRecord } from "../medical_records/models/medical_record.model";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Doctor, User])],
+  imports: [
+    SequelizeModule.forFeature([Doctor, User, Appointment, MedicalRecord]),
+  ],
   controllers: [DoctorsController],
   providers: [DoctorsService],
   exports: [DoctorsService],

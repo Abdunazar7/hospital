@@ -7,37 +7,35 @@ import { UpdatePatientDto } from "./dto/update-patient.dto";
 @Injectable()
 export class PatientsService {
   constructor(
-    @InjectModel(Patient) private readonly patientModel: typeof Patient
+    @InjectModel(Patient) private readonly patientRepo: typeof Patient
   ) {}
 
-  create(dto: CreatePatientDto) {
-    return this.patientModel.create(dto);
+  async create(createPatientDto: CreatePatientDto) {
+    const patient = await this.patientRepo.create(createPatientDto);
+    return { message: "Patient created successfully", patient };
   }
 
-  findAll() {
-    return this.patientModel.findAll({ include: { all: true } });
+  async findAll() {
+    return this.patientRepo.findAll({ include: { all: true } });
   }
 
   async findOne(id: number) {
-    const patient = await this.patientModel.findByPk(id, {
+    const patient = await this.patientRepo.findByPk(id, {
       include: { all: true },
     });
     if (!patient) throw new NotFoundException("Patient not found");
     return patient;
   }
 
-  async update(id: number, dto: UpdatePatientDto) {
-    const [count, updated] = await this.patientModel.update(dto, {
-      where: { id },
-      returning: true,
-    });
-    if (!count) throw new NotFoundException("Patient not found");
-    return updated[0];
+  async update(id: number, updatePatientDto: UpdatePatientDto) {
+    const patient = await this.findOne(id);
+    await patient.update(updatePatientDto);
+    return { message: "Patient updated successfully", patient };
   }
 
   async remove(id: number) {
-    const deleted = await this.patientModel.destroy({ where: { id } });
-    if (!deleted) throw new NotFoundException("Patient not found");
+    const patient = await this.findOne(id);
+    await patient.destroy();
     return { message: "Patient deleted successfully" };
   }
 }

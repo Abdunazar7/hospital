@@ -6,15 +6,17 @@ import { UpdateDoctorDto } from "./dto/update-doctor.dto";
 
 @Injectable()
 export class DoctorsService {
-  constructor(
-    @InjectModel(Doctor) private readonly doctorModel: typeof Doctor
-  ) {}
+  constructor(@InjectModel(Doctor) private doctorModel: typeof Doctor) {}
 
-  create(dto: CreateDoctorDto) {
-    return this.doctorModel.create(dto);
+  async create(createDoctorDto: CreateDoctorDto) {
+    const doctor = await this.doctorModel.create(createDoctorDto);
+    return {
+      message: "Doctor created successfully",
+      doctor,
+    };
   }
 
-  findAll() {
+  async findAll() {
     return this.doctorModel.findAll({ include: { all: true } });
   }
 
@@ -26,18 +28,18 @@ export class DoctorsService {
     return doctor;
   }
 
-  async update(id: number, dto: UpdateDoctorDto) {
-    const [count, updated] = await this.doctorModel.update(dto, {
-      where: { id },
-      returning: true,
-    });
-    if (!count) throw new NotFoundException("Doctor not found");
-    return updated[0];
+  async update(id: number, updateDoctorDto: UpdateDoctorDto) {
+    const doctor = await this.findOne(id);
+    await doctor.update(updateDoctorDto);
+    return {
+      message: "Doctor updated successfully",
+      doctor,
+    };
   }
 
   async remove(id: number) {
-    const deleted = await this.doctorModel.destroy({ where: { id } });
-    if (!deleted) throw new NotFoundException("Doctor not found");
+    const doctor = await this.findOne(id);
+    await doctor.destroy();
     return { message: "Doctor deleted successfully" };
   }
 }

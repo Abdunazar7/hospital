@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { Appointment } from "./models/appointment.model";
+import { CreateAppointmentDto } from "./dto/create-appointment.dto";
+import { UpdateAppointmentDto } from "./dto/update-appointment.dto";
 
 @Injectable()
 export class AppointmentsService {
-  create(createAppointmentDto: CreateAppointmentDto) {
-    return 'This action adds a new appointment';
+  constructor(
+    @InjectModel(Appointment)
+    private readonly appointmentModel: typeof Appointment
+  ) {}
+
+  async create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+    return this.appointmentModel.create(createAppointmentDto);
   }
 
-  findAll() {
-    return `This action returns all appointments`;
+  async findAll(): Promise<Appointment[]> {
+    return this.appointmentModel.findAll({ include: { all: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} appointment`;
+  async findOne(id: number): Promise<Appointment> {
+    const appointment = await this.appointmentModel.findByPk(id, {
+      include: { all: true },
+    });
+    if (!appointment) throw new NotFoundException("Appointment not found");
+    return appointment;
   }
 
-  update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
-    return `This action updates a #${id} appointment`;
+  async update(id: number, updateAppointmentDto: UpdateAppointmentDto): Promise<Appointment> {
+    const appointment = await this.findOne(id);
+    return appointment.update(updateAppointmentDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} appointment`;
+  async remove(id: number): Promise<{ message: string }> {
+    const appointment = await this.findOne(id);
+    await appointment.destroy();
+    return { message: "Appointment deleted successfully" };
   }
 }

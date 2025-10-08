@@ -39,8 +39,8 @@ export class UsersService {
     };
   }
 
-  async create(dto: CreateUserDto) {
-    const { password, confirm_password } = dto;
+  async create(createUserDto: CreateUserDto) {
+    const { password, confirm_password } = createUserDto;
 
     if (password !== confirm_password) {
       throw new BadRequestException("Passwords do not match");
@@ -48,7 +48,7 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, 7);
     const user = await this.userModel.create({
-      ...dto,
+      ...createUserDto,
       password: hashedPassword,
     });
 
@@ -74,8 +74,8 @@ export class UsersService {
     return this.userModel.findOne({ where: { email }, include: {all: true} });
   }
 
-  async update(id: number, dto: UpdateUserDto) {
-    const [count, users] = await this.userModel.update(dto, {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const [count, users] = await this.userModel.update(updateUserDto, {
       where: { id },
       returning: true,
     });

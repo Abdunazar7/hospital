@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PrescriptionsService } from './prescriptions.service';
-import { CreatePrescriptionDto } from './dto/create-prescription.dto';
-import { UpdatePrescriptionDto } from './dto/update-prescription.dto';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  Delete,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { PrescriptionsService } from "./prescriptions.service";
+import { CreatePrescriptionDto } from "./dto/create-prescription.dto";
+import { UpdatePrescriptionDto } from "./dto/update-prescription.dto";
 
-@Controller('prescriptions')
+@ApiTags("Prescriptions")
+@Controller("prescriptions")
 export class PrescriptionsController {
-  constructor(private readonly prescriptionsService: PrescriptionsService) {}
+  constructor(private s: PrescriptionsService) {}
 
+  @ApiOperation({ summary: "Create prescription" })
   @Post()
-  create(@Body() createPrescriptionDto: CreatePrescriptionDto) {
-    return this.prescriptionsService.create(createPrescriptionDto);
+  create(@Body() dto: CreatePrescriptionDto) {
+    return this.s.create(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.prescriptionsService.findAll();
+  @Get() findAll() {
+    return this.s.findAll();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.prescriptionsService.findOne(+id);
+  @Get(":id") findOne(@Param("id") id: string) {
+    return this.s.findOne(+id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePrescriptionDto: UpdatePrescriptionDto) {
-    return this.prescriptionsService.update(+id, updatePrescriptionDto);
+  @Patch(":id") update(
+    @Param("id") id: string,
+    @Body() dto: UpdatePrescriptionDto
+  ) {
+    return this.s.update(+id, dto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.prescriptionsService.remove(+id);
+  @Delete(":id") remove(@Param("id") id: string) {
+    return this.s.remove(+id);
   }
 }

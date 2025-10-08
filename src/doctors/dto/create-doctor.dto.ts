@@ -1,28 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString, Min, IsNumber } from "class-validator";
+import { IsInt, IsOptional, IsString, MaxLength, Min } from "class-validator";
 
 export class CreateDoctorDto {
-  @ApiProperty({ example: 2 })
+  @ApiProperty({ example: 2, description: "User ID" })
   @IsInt()
   user_id: number;
 
-  @ApiProperty({ example: "Cardiologist" })
+  @ApiProperty({ example: "Neurologist", description: "Doctor specialization" })
   @IsString()
+  @MaxLength(100)
   specialization: string;
 
-  @ApiProperty({ example: 10, required: false })
+  @ApiProperty({ example: 5, description: "Years of experience" })
   @IsOptional()
   @IsInt()
   @Min(0)
-  experience_years?: number;
+  experience?: number;
 
-  @ApiProperty({ example: 200, required: false })
-  @IsOptional()
-  @IsNumber()
-  consultation_fee?: number;
-
-  @ApiProperty({ example: "Tashkent City Hospital", required: false })
+  @ApiProperty({ example: "B-12", description: "Room number" })
   @IsOptional()
   @IsString()
-  clinic_address?: string;
+  @MaxLength(10)
+  room_number?: string;
 }

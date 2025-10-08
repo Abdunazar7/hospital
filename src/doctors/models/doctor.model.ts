@@ -1,25 +1,27 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
+  Table,
+  Model,
   Column,
   DataType,
   ForeignKey,
   BelongsTo,
-  Model,
-  Table,
+  HasMany,
 } from "sequelize-typescript";
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "../../users/models/user.model";
+import { Appointment } from "../../appointments/models/appointment.model";
+import { MedicalRecord } from "../../medical_records/models/medical_record.model";
 
 interface IDoctorCreationAttr {
   user_id: number;
   specialization: string;
-  experience_years?: number;
-  consultation_fee?: number;
-  clinic_address?: string;
+  experience?: number;
+  room_number?: string;
 }
 
 @Table({ tableName: "doctors" })
 export class Doctor extends Model<Doctor, IDoctorCreationAttr> {
-  @ApiProperty({ example: 1, description: "Unique doctor ID" })
+  @ApiProperty({ example: 1, description: "Doctor ID" })
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -27,11 +29,12 @@ export class Doctor extends Model<Doctor, IDoctorCreationAttr> {
   })
   declare id: number;
 
-  @ApiProperty({ example: 2, description: "Linked user ID" })
+  @ApiProperty({ example: 3, description: "User ID linked to doctor" })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
+    unique: true,
   })
   declare user_id: number;
 
@@ -50,25 +53,22 @@ export class Doctor extends Model<Doctor, IDoctorCreationAttr> {
     type: DataType.INTEGER,
     allowNull: true,
   })
-  declare experience_years: number | null;
+  declare experience: number;
 
-  @ApiProperty({ example: 200, description: "Consultation fee in USD" })
+  @ApiProperty({ example: "A-203", description: "Doctor room number" })
   @Column({
-    type: DataType.FLOAT,
+    type: DataType.STRING(10),
     allowNull: true,
   })
-  declare consultation_fee: number | null;
+  declare room_number: string;
 
-  @ApiProperty({
-    example: "Tashkent City Hospital, Block B",
-    description: "Clinic address",
-  })
-  @Column({
-    type: DataType.STRING(200),
-    allowNull: true,
-  })
-  declare clinic_address: string | null;
-
+  /** RELATIONS **/
   @BelongsTo(() => User)
   user: User;
+
+  @HasMany(() => Appointment)
+  appointments: Appointment[];
+
+  @HasMany(() => MedicalRecord)
+  medical_records: MedicalRecord[];
 }

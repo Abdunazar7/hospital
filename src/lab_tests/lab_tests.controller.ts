@@ -1,34 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LabTestsService } from './lab_tests.service';
-import { CreateLabTestDto } from './dto/create-lab_test.dto';
-import { UpdateLabTestDto } from './dto/update-lab_test.dto';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  Delete,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { LabTestsService } from "./lab_tests.service";
+import { CreateLabTestDto } from "./dto/create-lab_test.dto";
+import { UpdateLabTestDto } from "./dto/update-lab_test.dto";
 
-@Controller('lab-tests')
+@ApiTags("Lab Tests")
+@Controller("lab-tests")
 export class LabTestsController {
   constructor(private readonly labTestsService: LabTestsService) {}
 
+  @ApiOperation({ summary: "Create a new lab test" })
   @Post()
-  create(@Body() createLabTestDto: CreateLabTestDto) {
-    return this.labTestsService.create(createLabTestDto);
+  create(@Body() dto: CreateLabTestDto) {
+    return this.labTestsService.create(dto);
   }
 
+  @ApiOperation({ summary: "Get all lab tests" })
   @Get()
   findAll() {
     return this.labTestsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ApiOperation({ summary: "Get one lab test by ID" })
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.labTestsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLabTestDto: UpdateLabTestDto) {
-    return this.labTestsService.update(+id, updateLabTestDto);
+  @ApiOperation({ summary: "Update a lab test" })
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() dto: UpdateLabTestDto) {
+    return this.labTestsService.update(+id, dto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @ApiOperation({ summary: "Delete a lab test" })
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.labTestsService.remove(+id);
   }
 }

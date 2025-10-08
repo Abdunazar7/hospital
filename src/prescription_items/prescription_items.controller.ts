@@ -1,34 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PrescriptionItemsService } from './prescription_items.service';
-import { CreatePrescriptionItemDto } from './dto/create-prescription_item.dto';
-import { UpdatePrescriptionItemDto } from './dto/update-prescription_item.dto';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  Delete,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { PrescriptionItemsService } from "./prescription_items.service";
+import { CreatePrescriptionItemDto } from "./dto/create-prescription_item.dto";
+import { UpdatePrescriptionItemDto } from "./dto/update-prescription_item.dto";
 
-@Controller('prescription-items')
+@ApiTags("PrescriptionItems")
+@Controller("prescription-items")
 export class PrescriptionItemsController {
-  constructor(private readonly prescriptionItemsService: PrescriptionItemsService) {}
+  constructor(private s: PrescriptionItemsService) {}
 
+  @ApiOperation({ summary: "Create prescription item" })
   @Post()
-  create(@Body() createPrescriptionItemDto: CreatePrescriptionItemDto) {
-    return this.prescriptionItemsService.create(createPrescriptionItemDto);
+  create(@Body() dto: CreatePrescriptionItemDto) {
+    return this.s.create(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.prescriptionItemsService.findAll();
+  @Get() findAll() {
+    return this.s.findAll();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.prescriptionItemsService.findOne(+id);
+  @Get(":id") findOne(@Param("id") id: string) {
+    return this.s.findOne(+id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePrescriptionItemDto: UpdatePrescriptionItemDto) {
-    return this.prescriptionItemsService.update(+id, updatePrescriptionItemDto);
+  @Patch(":id") update(
+    @Param("id") id: string,
+    @Body() dto: UpdatePrescriptionItemDto
+  ) {
+    return this.s.update(+id, dto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.prescriptionItemsService.remove(+id);
+  @Delete(":id") remove(@Param("id") id: string) {
+    return this.s.remove(+id);
   }
 }

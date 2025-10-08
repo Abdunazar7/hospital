@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AppointmentsService } from './appointments.service';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  Delete,
+} from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { AppointmentsService } from "./appointments.service";
+import { CreateAppointmentDto } from "./dto/create-appointment.dto";
+import { UpdateAppointmentDto } from "./dto/update-appointment.dto";
 
-@Controller('appointments')
+@ApiTags("Appointments")
+@Controller("appointments")
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
+  @ApiOperation({ summary: "Create new appointment" })
+  @ApiResponse({ status: 201, description: "Appointment successfully created" })
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentsService.create(createAppointmentDto);
+  create(@Body() createDto: CreateAppointmentDto) {
+    return this.appointmentsService.create(createDto);
   }
 
+  @ApiOperation({ summary: "Get all appointments" })
   @Get()
   findAll() {
     return this.appointmentsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
+  @ApiOperation({ summary: "Get appointment by ID" })
+  @Get(":id")
+  findOne(@Param("id") id: number) {
+    return this.appointmentsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
+  @ApiOperation({ summary: "Update appointment" })
+  @Patch(":id")
+  update(@Param("id") id: number, @Body() updateDto: UpdateAppointmentDto) {
+    return this.appointmentsService.update(id, updateDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
+  @ApiOperation({ summary: "Delete appointment" })
+  @Delete(":id")
+  remove(@Param("id") id: number) {
+    return this.appointmentsService.remove(id);
   }
 }

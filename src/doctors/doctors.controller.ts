@@ -1,11 +1,11 @@
 import {
   Controller,
-  Get,
   Post,
-  Body,
+  Get,
   Patch,
-  Param,
   Delete,
+  Param,
+  Body,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { DoctorsService } from "./doctors.service";
@@ -29,19 +29,19 @@ export class DoctorsController {
     return this.doctorsService.findAll();
   }
 
-  @ApiOperation({ summary: "Get one doctor by ID" })
+  @ApiOperation({ summary: "Get doctor by ID" })
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.doctorsService.findOne(+id);
   }
 
-  @ApiOperation({ summary: "Update doctor by ID" })
+  @ApiOperation({ summary: "Update doctor information" })
   @Patch(":id")
   update(@Param("id") id: string, @Body() dto: UpdateDoctorDto) {
     return this.doctorsService.update(+id, dto);
   }
 
-  @ApiOperation({ summary: "Delete doctor by ID" })
+  @ApiOperation({ summary: "Delete a doctor" })
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.doctorsService.remove(+id);

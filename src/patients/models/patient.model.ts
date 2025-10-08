@@ -1,26 +1,28 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
+  Table,
+  Model,
   Column,
   DataType,
   ForeignKey,
   BelongsTo,
-  Model,
-  Table,
+  HasMany,
 } from "sequelize-typescript";
+import { ApiProperty } from "@nestjs/swagger";
 import { User } from "../../users/models/user.model";
+import { Appointment } from "../../appointments/models/appointment.model";
+import { Payment } from "../../payments/models/payment.model";
+import { MedicalRecord } from "../../medical_records/models/medical_record.model";
 
 interface IPatientCreationAttr {
   user_id: number;
-  date_of_birth?: Date;
-  gender?: string;
-  blood_type?: string;
-  emergency_contact?: string;
+  birth_date?: Date;
+  gender?: "MALE" | "FEMALE";
   address?: string;
 }
 
 @Table({ tableName: "patients" })
 export class Patient extends Model<Patient, IPatientCreationAttr> {
-  @ApiProperty({ example: 1, description: "Unique patient ID" })
+  @ApiProperty({ example: 1, description: "Patient ID" })
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -28,52 +30,46 @@ export class Patient extends Model<Patient, IPatientCreationAttr> {
   })
   declare id: number;
 
-  @ApiProperty({ example: 3, description: "Related user ID (foreign key)" })
+  @ApiProperty({ example: 5, description: "Linked User ID" })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
+    unique: true,
   })
   declare user_id: number;
 
-  @ApiProperty({ example: "1990-05-15", description: "Date of birth" })
+  @ApiProperty({ example: "1995-06-14", description: "Date of birth" })
   @Column({
-    type: DataType.DATEONLY,
+    type: DataType.DATE,
     allowNull: true,
   })
-  declare date_of_birth: Date | null;
+  declare birth_date: Date;
 
-  @ApiProperty({ example: "Male", description: "Gender" })
+  @ApiProperty({ example: "MALE", description: "Gender of patient" })
   @Column({
-    type: DataType.STRING(10),
+    type: DataType.ENUM("MALE", "FEMALE"),
     allowNull: true,
   })
-  declare gender: string | null;
-
-  @ApiProperty({ example: "O+", description: "Blood type" })
-  @Column({
-    type: DataType.STRING(5),
-    allowNull: true,
-  })
-  declare blood_type: string | null;
-
-  @ApiProperty({
-    example: "+998991234567",
-    description: "Emergency contact number",
-  })
-  @Column({
-    type: DataType.STRING(20),
-    allowNull: true,
-  })
-  declare emergency_contact: string | null;
+  declare gender: "MALE" | "FEMALE";
 
   @ApiProperty({ example: "Tashkent, Uzbekistan", description: "Home address" })
   @Column({
-    type: DataType.STRING(200),
+    type: DataType.STRING(255),
     allowNull: true,
   })
-  declare address: string | null;
+  declare address: string;
 
+  /** RELATIONS **/
   @BelongsTo(() => User)
   user: User;
+
+  @HasMany(() => Appointment)
+  appointments: Appointment[];
+
+  @HasMany(() => Payment)
+  payments: Payment[];
+
+  @HasMany(() => MedicalRecord)
+  medical_records: MedicalRecord[];
 }

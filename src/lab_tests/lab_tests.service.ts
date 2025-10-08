@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLabTestDto } from './dto/create-lab_test.dto';
-import { UpdateLabTestDto } from './dto/update-lab_test.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { LabTest } from "./models/lab_test.model";
+import { CreateLabTestDto } from "./dto/create-lab_test.dto";
+import { UpdateLabTestDto } from "./dto/update-lab_test.dto";
 
 @Injectable()
 export class LabTestsService {
+  constructor(@InjectModel(LabTest) private labTestModel: typeof LabTest) {}
+
   create(createLabTestDto: CreateLabTestDto) {
-    return 'This action adds a new labTest';
+    return this.labTestModel.create(createLabTestDto);
   }
 
   findAll() {
-    return `This action returns all labTests`;
+    return this.labTestModel.findAll({ include: { all: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} labTest`;
+  async findOne(id: number) {
+    const lab = await this.labTestModel.findByPk(id, { include: { all: true } });
+    if (!lab) throw new NotFoundException("Lab test not found");
+    return lab;
   }
 
-  update(id: number, updateLabTestDto: UpdateLabTestDto) {
-    return `This action updates a #${id} labTest`;
+  async update(id: number, updateLabTestDto: UpdateLabTestDto) {
+    const lab = await this.findOne(id);
+    return lab.update(updateLabTestDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} labTest`;
+  async remove(id: number) {
+    const lab = await this.findOne(id);
+    await lab.destroy();
+    return { message: "Lab test deleted successfully" };
   }
 }
