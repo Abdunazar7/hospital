@@ -23,7 +23,7 @@ async function start() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle("Hospital Management System API")
     .setDescription(
-      "A private hospital management backend built with NestJS, PostgreSQL, Sequelize ORM, and JWT authentication. This API provides functionalities for users (admins, doctors, patients, and staff), appointments, medical records, prescriptions, and payments."
+      "A private hospital management backend"
     )
     .setVersion("1.0")
     .addBearerAuth()

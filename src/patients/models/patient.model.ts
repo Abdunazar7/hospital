@@ -70,6 +70,4 @@ export class Patient extends Model<Patient, IPatientCreationAttr> {
   @HasMany(() => Payment)
   payments: Payment[];
 
-  @HasMany(() => MedicalRecord)
-  medical_records: MedicalRecord[];
 }

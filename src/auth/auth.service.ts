@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Response } from "express";
+import type { Response } from "express";
 import * as bcrypt from "bcrypt";
 
 import { User } from "../users/models/user.model";
@@ -25,7 +25,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       is_active: user.is_active,
-      is_creator: user.is_creator,
+      role: user.role,
     };
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -53,7 +53,7 @@ export class AuthService {
     const newUser = await this.usersService.create(createUserDto);
     return {
       message: "User registered successfully. Please verify your email.",
-      userId: newUser.id,
+      userId: newUser,
     };
   }
 

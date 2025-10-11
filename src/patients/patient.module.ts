@@ -7,6 +7,7 @@ import { User } from "../users/models/user.model";
 import { Appointment } from "../appointments/models/appointment.model";
 import { Payment } from "../payments/models/payment.model";
 import { MedicalRecord } from "../medical_records/models/medical_record.model";
+import { UsersModule } from "../users/user.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MedicalRecord } from "../medical_records/models/medical_record.model";
       Payment,
       MedicalRecord,
     ]),
+    UsersModule,
   ],
   controllers: [PatientsController],
   providers: [PatientsService],

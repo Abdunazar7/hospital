@@ -1,0 +1,415 @@
+{
+  "info": {
+    "_postman_id": "c22b11c4-a45e-42af-bb12-a987f91f7123",
+    "name": "Hospital Management API (Full CRUD)",
+    "description": "Complete Postman collection for hospital management system backend (NestJS + Swagger + Guards).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"123456\",\n  \"phone\": \"998901234567\",\n  \"role\": \"DOCTOR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": { "method": "GET", "url": "{{baseUrl}}/users" }
+        },
+        {
+          "name": "Get User by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/users/1" }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Updated User\",\n  \"phone\": \"998909876543\"\n}"
+            },
+            "url": "{{baseUrl}}/users/1"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/users/1" }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"specialization\": \"Cardiology\",\n  \"experience\": 10,\n  \"room_number\": \"A-101\"\n}"
+            },
+            "url": "{{baseUrl}}/doctors"
+          }
+        },
+        {
+          "name": "Get All Doctors",
+          "request": { "method": "GET", "url": "{{baseUrl}}/doctors" }
+        },
+        {
+          "name": "Get Doctor by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/doctors/1" }
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "body": { "mode": "raw", "raw": "{\n  \"experience\": 12\n}" },
+            "url": "{{baseUrl}}/doctors/1"
+          }
+        },
+        {
+          "name": "Delete Doctor",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/doctors/1" }
+        }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 2,\n  \"birth_date\": \"1990-05-10\",\n  \"gender\": \"MALE\",\n  \"address\": \"Tashkent\"\n}"
+            },
+            "url": "{{baseUrl}}/patients"
+          }
+        },
+        {
+          "name": "Get All Patients",
+          "request": { "method": "GET", "url": "{{baseUrl}}/patients" }
+        },
+        {
+          "name": "Get Patient by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/patients/1" }
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"Samarkand\"\n}"
+            },
+            "url": "{{baseUrl}}/patients/1"
+          }
+        },
+        {
+          "name": "Delete Patient",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/patients/1" }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": 1,\n  \"doctor_id\": 1,\n  \"appointment_date\": \"2025-10-10T09:00:00\",\n  \"notes\": \"Initial consultation\"\n}"
+            },
+            "url": "{{baseUrl}}/appointments"
+          }
+        },
+        {
+          "name": "Get All Appointments",
+          "request": { "method": "GET", "url": "{{baseUrl}}/appointments" }
+        },
+        {
+          "name": "Get Appointment by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/appointments/1" }
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": "{{baseUrl}}/appointments/1"
+          }
+        },
+        {
+          "name": "Delete Appointment",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/appointments/1" }
+        }
+      ]
+    },
+    {
+      "name": "Medical Records",
+      "item": [
+        {
+          "name": "Create Medical Record",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lab_results\": 1,\n  \"appointment_id\": 1,\n  \"diagnosis\": \"Flu\",\n  \"treatment\": \"Rest and hydration\"\n}"
+            },
+            "url": "{{baseUrl}}/medical-records"
+          }
+        },
+        {
+          "name": "Get All Medical Records",
+          "request": { "method": "GET", "url": "{{baseUrl}}/medical-records" }
+        },
+        {
+          "name": "Get Medical Record by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/medical-records/1" }
+        },
+        {
+          "name": "Update Medical Record",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"treatment\": \"Antibiotics prescribed\"\n}"
+            },
+            "url": "{{baseUrl}}/medical-records/1"
+          }
+        },
+        {
+          "name": "Delete Medical Record",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/medical-records/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prescriptions",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medical_record_id\": 1,\n  \"notes\": \"Take with food\"\n}"
+            },
+            "url": "{{baseUrl}}/prescriptions"
+          }
+        },
+        {
+          "name": "Get All Prescriptions",
+          "request": { "method": "GET", "url": "{{baseUrl}}/prescriptions" }
+        },
+        {
+          "name": "Get Prescription by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/prescriptions/1" }
+        },
+        {
+          "name": "Update Prescription",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated dosage\"\n}"
+            },
+            "url": "{{baseUrl}}/prescriptions/1"
+          }
+        },
+        {
+          "name": "Delete Prescription",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/prescriptions/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medications",
+      "item": [
+        {
+          "name": "Create Medication",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Paracetamol\",\n  \"description\": \"Pain reliever\",\n  \"unit\": \"500mg\"\n}"
+            },
+            "url": "{{baseUrl}}/medications"
+          }
+        },
+        {
+          "name": "Get All Medications",
+          "request": { "method": "GET", "url": "{{baseUrl}}/medications" }
+        },
+        {
+          "name": "Get Medication by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/medications/1" }
+        },
+        {
+          "name": "Update Medication",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Pain and fever reducer\"\n}"
+            },
+            "url": "{{baseUrl}}/medications/1"
+          }
+        },
+        {
+          "name": "Delete Medication",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/medications/1" }
+        }
+      ]
+    },
+    {
+      "name": "Lab Tests",
+      "item": [
+        {
+          "name": "Create Lab Test",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment_id\": 1,\n  \"test_name\": \"Blood Test\",\n  \"result\": \"Normal\"\n}"
+            },
+            "url": "{{baseUrl}}/lab-tests"
+          }
+        },
+        {
+          "name": "Get All Lab Tests",
+          "request": { "method": "GET", "url": "{{baseUrl}}/lab-tests" }
+        },
+        {
+          "name": "Get Lab Test by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/lab-tests/1" }
+        },
+        {
+          "name": "Update Lab Test",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"result\": \"Slightly low hemoglobin\"\n}"
+            },
+            "url": "{{baseUrl}}/lab-tests/1"
+          }
+        },
+        {
+          "name": "Delete Lab Test",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/lab-tests/1" }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": 1,\n  \"appointment_id\": 1,\n  \"amount\": 150.00,\n  \"status\": \"PAID\"\n}"
+            },
+            "url": "{{baseUrl}}/payments"
+          }
+        },
+        {
+          "name": "Get All Payments",
+          "request": { "method": "GET", "url": "{{baseUrl}}/payments" }
+        },
+        {
+          "name": "Get Payment by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/payments/1" }
+        },
+        {
+          "name": "Update Payment",
+          "request": {
+            "method": "PUT",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"FAILED\"\n}" },
+            "url": "{{baseUrl}}/payments/1"
+          }
+        },
+        {
+          "name": "Delete Payment",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/payments/1" }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "accessToken", "value": "" }
+  ]
+}

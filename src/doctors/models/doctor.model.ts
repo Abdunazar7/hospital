@@ -69,6 +69,4 @@ export class Doctor extends Model<Doctor, IDoctorCreationAttr> {
   @HasMany(() => Appointment)
   appointments: Appointment[];
 
-  @HasMany(() => MedicalRecord)
-  medical_records: MedicalRecord[];
 }

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
@@ -9,6 +10,7 @@ import { User } from "./models/user.model";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { MailService } from "../mail/mail.service";
+import { UserRole } from "../app.constants";
 
 @Injectable()
 export class UsersService {
@@ -36,44 +38,59 @@ export class UsersService {
     return {
       message: "User successfully activated",
       is_active: updatedUser.is_active,
+      id: updatedUser.id,
     };
   }
 
+  async findByEmail(email: string) {
+    return this.userModel.findOne({
+      where: { email },
+      include: { all: true },
+    });
+  }
+
+  
   async create(createUserDto: CreateUserDto) {
     const { password, confirm_password } = createUserDto;
-
+    
     if (password !== confirm_password) {
       throw new BadRequestException("Passwords do not match");
     }
-
+    
     const hashedPassword = await bcrypt.hash(password, 7);
     const user = await this.userModel.create({
       ...createUserDto,
       password: hashedPassword,
+      role: UserRole.USER,
     });
-
+    
     try {
       await this.mailService.sendMail(user);
     } catch (error) {
       console.log(error);
       throw new ServiceUnavailableException("Error sending activation email");
     }
-
+    
     return user;
   }
-
-  findAll() {
-    return this.userModel.findAll({include: {all: true} });
+  
+  async updateRole(userId: number, newRole: UserRole): Promise<void> {
+    const user = await this.userModel.findByPk(userId);
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+    user.role = newRole;
+    await user.save();
   }
-
+  
+  findAll() {
+    return this.userModel.findAll({ include: { all: true } });
+  }
+  
   findOne(id: number) {
     return this.userModel.findByPk(id, { include: { all: true } });
   }
-
-  async findByEmail(email: string) {
-    return this.userModel.findOne({ where: { email }, include: {all: true} });
-  }
-
+  
   async update(id: number, updateUserDto: UpdateUserDto) {
     const [count, users] = await this.userModel.update(updateUserDto, {
       where: { id },
@@ -82,7 +99,7 @@ export class UsersService {
     if (!count) throw new BadRequestException("User not found");
     return users[0];
   }
-
+  
   async remove(id: number) {
     const deleted = await this.userModel.destroy({ where: { id } });
     if (!deleted) throw new BadRequestException("User not found");

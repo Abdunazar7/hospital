@@ -7,14 +7,19 @@ import {
   ParseIntPipe,
   Post,
   Res,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import type { Response } from "express";
 
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { LoginDtoUserDto } from "../users/dto/login.dto";
 import { CookieGetter } from "../common/decorators/cookie-getter.decorator";
-import type { Response, Request } from "express";
+import { UserAuthGuard } from "../common/guards/user-auth.guard";
+import { RolesGuard } from "../common/guards/roles.guard";
+import { Roles } from "../app.constants";
+import { UserRole } from "../app.constants";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -22,14 +27,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: "User Registration" })
-  @ApiResponse({ status: 201, description: "User successfully registered" })
   @Post("register")
+  @HttpCode(HttpStatus.CREATED)
   signup(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
   }
 
   @ApiOperation({ summary: "User Login" })
-  @ApiResponse({ status: 200, description: "Login successful" })
   @Post("login")
   @HttpCode(HttpStatus.OK)
   signin(
@@ -40,6 +44,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "User Logout" })
+  // @UseGuards(UserAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(
@@ -50,6 +55,8 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "Refresh Access Token" })
+  // @UseGuards(UserAuthGuard, RolesGuard)
+  // @Roles(UserRole.ADMIN, UserRole.USER, UserRole.DOCTOR, UserRole.PATIENT)
   @Post(":id/refresh")
   @HttpCode(HttpStatus.OK)
   refresh(

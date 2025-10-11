@@ -4,13 +4,19 @@ import {
   Body,
   Get,
   Param,
-  Patch,
+  Put,
   Delete,
+  UseGuards,
+  HttpCode,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { MedicationsService } from "./medications.service";
 import { CreateMedicationDto } from "./dto/create-medication.dto";
 import { UpdateMedicationDto } from "./dto/update-medication.dto";
+import { UserAuthGuard } from "../common/guards/user-auth.guard";
+import { RolesGuard } from "../common/guards/roles.guard";
+import { Roles } from "../app.constants";
+import { UserRole } from "../app.constants";
 
 @ApiTags("Medications")
 @Controller("medications")
@@ -19,8 +25,9 @@ export class MedicationsController {
 
   @ApiOperation({ summary: "Create a new medication" })
   @Post()
-  create(@Body() dto: CreateMedicationDto) {
-    return this.medicationsService.create(dto);
+  @HttpCode(201)
+  create(@Body() createMedicationDto: CreateMedicationDto) {
+    return this.medicationsService.create(createMedicationDto);
   }
 
   @ApiOperation({ summary: "Get all medications" })
@@ -31,19 +38,19 @@ export class MedicationsController {
 
   @ApiOperation({ summary: "Get medication by ID" })
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.medicationsService.findOne(+id);
+  findOne(@Param("id") id: number) {
+    return this.medicationsService.findOne(id);
   }
 
-  @ApiOperation({ summary: "Update a medication" })
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() dto: UpdateMedicationDto) {
-    return this.medicationsService.update(+id, dto);
+  @ApiOperation({ summary: "Update medication" })
+  @Put(":id")
+  update(@Param("id") id: number, @Body() updateMedicationDto: UpdateMedicationDto) {
+    return this.medicationsService.update(id, updateMedicationDto);
   }
 
-  @ApiOperation({ summary: "Delete a medication" })
+  @ApiOperation({ summary: "Delete medication" })
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.medicationsService.remove(+id);
+  remove(@Param("id") id: number) {
+    return this.medicationsService.remove(id);
   }
 }

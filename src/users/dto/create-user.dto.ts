@@ -31,12 +31,12 @@ export class CreateUserDto {
   @MinLength(6)
   confirm_password: string;
 
-  @ApiProperty({
-    example: "PATIENT",
-    enum: ["ADMIN", "DOCTOR", "PATIENT", "STAFF"],
-    required: false,
-  })
-  @IsOptional()
-  @IsEnum(["ADMIN", "DOCTOR", "PATIENT", "STAFF"])
-  role?: "ADMIN" | "DOCTOR" | "PATIENT" | "STAFF";
+  // @ApiProperty({
+  //   example: "PATIENT",
+  //   enum: ["ADMIN", "DOCTOR", "PATIENT", "STAFF", "USER"],
+  //   required: false,
+  // })
+  // @IsOptional()
+  // @IsString()
+  // role?: string;
 }

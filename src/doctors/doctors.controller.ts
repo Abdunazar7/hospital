@@ -2,15 +2,21 @@ import {
   Controller,
   Post,
   Get,
-  Patch,
+  Put,
   Delete,
   Param,
   Body,
+  UseGuards,
+  HttpCode,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { DoctorsService } from "./doctors.service";
 import { CreateDoctorDto } from "./dto/create-doctor.dto";
 import { UpdateDoctorDto } from "./dto/update-doctor.dto";
+import { UserAuthGuard } from "../common/guards/user-auth.guard";
+import { RolesGuard } from "../common/guards/roles.guard";
+import { Roles } from "../app.constants";
+import { UserRole } from "../app.constants";
 
 @ApiTags("Doctors")
 @Controller("doctors")
@@ -19,8 +25,9 @@ export class DoctorsController {
 
   @ApiOperation({ summary: "Create a new doctor" })
   @Post()
-  create(@Body() dto: CreateDoctorDto) {
-    return this.doctorsService.create(dto);
+  @HttpCode(201)
+  create(@Body() createDoctorDto: CreateDoctorDto) {
+    return this.doctorsService.create(createDoctorDto);
   }
 
   @ApiOperation({ summary: "Get all doctors" })
@@ -31,14 +38,14 @@ export class DoctorsController {
 
   @ApiOperation({ summary: "Get doctor by ID" })
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.doctorsService.findOne(+id);
+  findOne(@Param("id") id: number) {
+    return this.doctorsService.findOne(id);
   }
 
   @ApiOperation({ summary: "Update doctor information" })
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() dto: UpdateDoctorDto) {
-    return this.doctorsService.update(+id, dto);
+  @Put(":id")
+  update(@Param("id") id: number, @Body() updateDoctorDto: UpdateDoctorDto) {
+    return this.doctorsService.update(id, updateDoctorDto);
   }
 
   @ApiOperation({ summary: "Delete a doctor" })

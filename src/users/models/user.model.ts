@@ -8,7 +8,7 @@ interface IUserCreationAttr {
   email: string;
   password: string;
   phone?: string;
-  role?: "ADMIN" | "DOCTOR" | "PATIENT" | "STAFF";
+  role?: string;
 }
 
 @Table({ tableName: "users" })
@@ -60,13 +60,13 @@ export class User extends Model<User, IUserCreationAttr> {
 
   @ApiProperty({
     example: "PATIENT",
-    description: "User role (ADMIN, DOCTOR, PATIENT, STAFF)",
+    description: "User role (ADMIN, DOCTOR, PATIENT, STAFF, USER)",
   })
   @Column({
-    type: DataType.ENUM("ADMIN", "DOCTOR", "PATIENT", "STAFF"),
-    defaultValue: "PATIENT",
+    type: DataType.STRING,
+    defaultValue: "USER",
   })
-  declare role: "ADMIN" | "DOCTOR" | "PATIENT" | "STAFF";
+  declare role: string;
 
   @ApiProperty({ example: false, description: "User active status" })
   @Column({
@@ -74,13 +74,6 @@ export class User extends Model<User, IUserCreationAttr> {
     defaultValue: false,
   })
   declare is_active: boolean;
-
-  @ApiProperty({ example: false, description: "Whether user is creator/admin" })
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  declare is_creator: boolean;
 
   @ApiProperty({ example: null, description: "Refresh token (if logged in)" })
   @Column({
