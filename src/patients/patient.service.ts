@@ -47,6 +47,10 @@ export class PatientsService {
     };
   }
 
+  async findByUserId(userId: number) {
+    return this.patientModel.findOne({ where: { user_id: userId } });
+  }
+
   async findAll() {
     return this.patientModel.findAll({ include: { all: true } });
   }

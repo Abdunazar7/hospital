@@ -11,8 +11,10 @@ export class CreatorGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (!user || !user.is_creator) {
-      throw new ForbiddenException("Only creator can perform this action");
+    if (!user || user.role !== "ADMIN" || !user.is_creator) {
+      throw new ForbiddenException(
+        "Only the creator admin can perform this action"
+      );
     }
 
     return true;

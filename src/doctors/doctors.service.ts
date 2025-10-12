@@ -46,6 +46,10 @@ export class DoctorsService {
     return this.doctorModel.findAll({ include: { all: true } });
   }
 
+  async findByUserId(userId: number) {
+    return this.doctorModel.findOne({ where: { user_id: userId } });
+  }
+
   async findOne(id: number) {
     const doctor = await this.doctorModel.findByPk(id, {
       include: { all: true },

@@ -11,16 +11,15 @@ export class SelfGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (!user)
-      throw new ForbiddenException("User information not found in request");
+    if (!user) throw new ForbiddenException("User info not found in request");
 
-    // id ni integer yoki string bo‘lishiga moslashtiramiz
     const paramId = Number(request.params.id);
+    if (!paramId)
+      throw new ForbiddenException("Invalid or missing resource ID");
 
+    // 🧩 Token bilan URL'dagi id ni solishtiramiz
     if (user.id !== paramId) {
-      throw new ForbiddenException(
-        "You are not authorized to access this resource"
-      );
+      throw new ForbiddenException("Access denied — not your account");
     }
 
     return true;

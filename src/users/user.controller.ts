@@ -9,7 +9,12 @@ import {
   HttpCode,
   UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 import { UsersService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -19,45 +24,58 @@ import { Roles } from "../app.constants";
 import { UserRole } from "../app.constants";
 
 @ApiTags("Users")
+@ApiBearerAuth("JWT-auth")
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: "Activate user by email link" })
+  @ApiResponse({ status: 200, description: "User activated successfully" })
   @Get("activate/:link")
   @HttpCode(200)
   activateUser(@Param("link") link: string) {
     return this.usersService.activateUser(link);
   }
 
-  // @ApiOperation({ summary: "Register a new user" })
-  // @Roles(UserRole.USER)
-  // @HttpCode(201)
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.create(createUserDto);
-  // }
+  @ApiOperation({ summary: "Register a new user" })
+  @ApiResponse({ status: 201, description: "User created successfully" })
+  @Post()
+  @HttpCode(201)
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
 
-  @ApiOperation({ summary: "Get all users" })
+  @ApiOperation({ summary: "Get all users (Admin only)" })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR)
+  @UseGuards(RolesGuard)
+  @UseGuards(UserAuthGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
   @ApiOperation({ summary: "Get user by ID" })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT)
+  @UseGuards(RolesGuard)
+  @UseGuards(UserAuthGuard)
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param("id") id: number) {
+    return this.usersService.findOne(id);
   }
 
-  @ApiOperation({ summary: "Update user information" })
+  @ApiOperation({ summary: "Update user info (Admin or self)" })
+  @UseGuards(UserAuthGuard)
   @Put(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(id, updateUserDto);
   }
 
-  @ApiOperation({ summary: "Delete user by ID" })
+  @ApiOperation({ summary: "Delete user (Admin only)" })
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RolesGuard)
+  @UseGuards(UserAuthGuard)
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param("id") id: number) {
+    return this.usersService.remove(id);
   }
 }
