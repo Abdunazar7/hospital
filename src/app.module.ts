@@ -15,6 +15,7 @@ import { PrescriptionItemsModule } from './prescription_items/prescription_items
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { AdminsModule } from './admins/admins.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -60,6 +61,8 @@ import { AdminsModule } from './admins/admins.module';
     MailModule,
 
     AdminsModule,
+
+    ReportsModule,
   ],
   controllers: [],
   providers: [],
