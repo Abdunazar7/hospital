@@ -44,7 +44,6 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "User Logout" })
-  @UseGuards(UserAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(
@@ -55,7 +54,6 @@ export class AuthController {
   }
   
   @ApiOperation({ summary: "Refresh Access Token" })
-  @UseGuards(UserAuthGuard)
   @Post(":id/refresh")
   @HttpCode(HttpStatus.OK)
   refresh(

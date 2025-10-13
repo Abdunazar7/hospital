@@ -5,7 +5,7 @@ import { Sequelize } from "sequelize-typescript";
 export class ReportsService {
   constructor(private readonly sequelize: Sequelize) {}
 
-  // 1 Eng ko‘p appointment qilgan shifokorlar
+  // 1 Eng ko‘p appointment qilgan 5 shifokorlar
   async topDoctors() {
     const [rows] = await this.sequelize.query(`
       SELECT 
@@ -22,7 +22,7 @@ export class ReportsService {
     return rows;
   }
 
-  // 2 Eng ko‘p to‘lov qilgan bemorlar
+  // 2 Eng ko‘p to‘lov qilgan 5 bemorlar
   async topPatients() {
     const [rows] = await this.sequelize.query(`
       SELECT 

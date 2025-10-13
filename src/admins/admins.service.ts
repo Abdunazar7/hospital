@@ -129,7 +129,7 @@ export class AdminsService {
       maxAge: Number(process.env.COOKIE_TIME),
     });
 
-    return { message: "Token refreshed", accessToken };
+    return { message: "Token refreshed", accessToken, adminId: admin.id };
   }
 
   async findAll() {

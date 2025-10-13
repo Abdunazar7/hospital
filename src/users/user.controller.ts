@@ -22,6 +22,8 @@ import { UserAuthGuard } from "../common/guards/user-auth.guard";
 import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../app.constants";
 import { UserRole } from "../app.constants";
+import { Use } from "nestjs-telegraf";
+import { SelfGuard } from "../common/guards/self.guard";
 
 @ApiTags("Users")
 @ApiBearerAuth("JWT-auth")
@@ -37,13 +39,13 @@ export class UsersController {
     return this.usersService.activateUser(link);
   }
 
-  @ApiOperation({ summary: "Register a new user" })
-  @ApiResponse({ status: 201, description: "User created successfully" })
-  @Post()
-  @HttpCode(201)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+  // @ApiOperation({ summary: "Register a new user" })
+  // @ApiResponse({ status: 201, description: "User created successfully" })
+  // @Post()
+  // @HttpCode(201)
+  // create(@Body() createUserDto: CreateUserDto) {
+  //   return this.usersService.create(createUserDto);
+  // }
 
   @ApiOperation({ summary: "Get all users (Admin only)" })
   @Roles(UserRole.ADMIN, UserRole.DOCTOR)
@@ -55,7 +57,8 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: "Get user by ID" })
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT)
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.USER)
+  @UseGuards(SelfGuard)
   @UseGuards(RolesGuard)
   @UseGuards(UserAuthGuard)
   @Get(":id")
@@ -64,6 +67,9 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: "Update user info (Admin or self)" })
+  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.USER)
+  @UseGuards(SelfGuard)
+  @UseGuards(RolesGuard)
   @UseGuards(UserAuthGuard)
   @Put(":id")
   update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {

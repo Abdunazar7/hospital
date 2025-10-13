@@ -62,8 +62,6 @@ export class AdminsController {
 
   @ApiOperation({ summary: "Logout admin (ADMIN only)" })
   @ApiResponse({ status: 200, description: "Logged out successfully" })
-  @Roles(UserRole.ADMIN)
-  @UseGuards(UserAuthGuard, RolesGuard)
   @Post("logout")
   logout(
     @CookieGetter("refreshToken") refreshToken: string,
