@@ -5,7 +5,7 @@ import { Sequelize } from "sequelize-typescript";
 export class ReportsService {
   constructor(private readonly sequelize: Sequelize) {}
 
-  // 1️⃣ Eng ko‘p appointment qilgan shifokorlar
+  // 1 Eng ko‘p appointment qilgan shifokorlar
   async topDoctors() {
     const [rows] = await this.sequelize.query(`
       SELECT 
@@ -22,7 +22,7 @@ export class ReportsService {
     return rows;
   }
 
-  // 2️⃣ Eng ko‘p to‘lov qilgan bemorlar
+  // 2 Eng ko‘p to‘lov qilgan bemorlar
   async topPatients() {
     const [rows] = await this.sequelize.query(`
       SELECT 
@@ -39,7 +39,7 @@ export class ReportsService {
     return rows;
   }
 
-  // 3️⃣ Oylar kesimida umumiy tushum
+  // 3️ Oylar kesimida umumiy tushum
   async monthlyRevenue() {
     const [rows] = await this.sequelize.query(`
       SELECT 
@@ -52,7 +52,7 @@ export class ReportsService {
     return rows;
   }
 
-  // 4️⃣ Shifokorlar faoliyat statistikasi
+  // 4️ Shifokorlar faoliyat statistikasi
   async doctorPerformance() {
     const [rows] = await this.sequelize.query(`
       SELECT 
@@ -72,7 +72,7 @@ export class ReportsService {
     return rows;
   }
 
-  // 5️⃣ Lab testlar statistikasi
+  // 5️ Lab testlar statistikasi
   async labTestStats() {
     const [rows] = await this.sequelize.query(`
       SELECT 

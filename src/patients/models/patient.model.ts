@@ -60,7 +60,6 @@ export class Patient extends Model<Patient, IPatientCreationAttr> {
   })
   declare address: string;
 
-  /** RELATIONS **/
   @BelongsTo(() => User)
   user: User;
 

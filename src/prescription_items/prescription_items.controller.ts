@@ -35,7 +35,6 @@ import { CreatorGuard } from "../common/guards/creator.guard";
 export class PrescriptionItemsController {
   constructor(private readonly prescriptionItemsService: PrescriptionItemsService) {}
 
-  // --- 🧾 CREATE (DOCTOR only)
   @ApiOperation({ summary: "Create a new prescription item (DOCTOR only)" })
   @ApiResponse({
     status: 201,
@@ -50,7 +49,6 @@ export class PrescriptionItemsController {
     return this.prescriptionItemsService.create(createPrescriptionItemDto);
   }
 
-  // --- 📋 GET ALL (ADMIN, DOCTOR)
   @ApiOperation({ summary: "Get all prescription items (ADMIN, DOCTOR)" })
   @ApiResponse({
     status: 200,
@@ -64,7 +62,6 @@ export class PrescriptionItemsController {
     return this.prescriptionItemsService.findAll();
   }
 
-  // --- 🔍 GET BY ID (ADMIN, DOCTOR, PATIENT)
   @ApiOperation({
     summary: "Get prescription item by ID (ADMIN, DOCTOR, PATIENT)",
   })
@@ -86,7 +83,6 @@ export class PrescriptionItemsController {
     return item;
   }
 
-  // --- ✏️ UPDATE (DOCTOR, ADMIN)
   @ApiOperation({ summary: "Update prescription item (DOCTOR, ADMIN)" })
   @ApiResponse({
     status: 200,
@@ -99,8 +95,7 @@ export class PrescriptionItemsController {
   update(@Param("id") id: number, @Body() updatePrescriptionItemDto: UpdatePrescriptionItemDto) {
     return this.prescriptionItemsService.update(id, updatePrescriptionItemDto);
   }
-
-  // --- ❌ DELETE (CREATOR or ADMIN)
+  
   @ApiOperation({
     summary: "Delete prescription item (Creator or Admin only)",
   })

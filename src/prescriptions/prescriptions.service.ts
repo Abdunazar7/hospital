@@ -6,29 +6,30 @@ import { UpdatePrescriptionDto } from "./dto/update-prescription.dto";
 
 @Injectable()
 export class PrescriptionsService {
-  constructor(@InjectModel(Prescription) private repo: typeof Prescription) {}
+  constructor(@InjectModel(Prescription) private prescriptionModel: typeof Prescription) {}
 
   create(createPrescriptionDto: CreatePrescriptionDto) {
-    return this.repo.create(createPrescriptionDto);
+    return this.prescriptionModel.create(createPrescriptionDto);
   }
+
   findAll() {
-    return this.repo.findAll({ include: { all: true } });
+    return this.prescriptionModel.findAll({ include: { all: true } });
   }
 
   async findOne(id: number) {
-    const p = await this.repo.findByPk(id, { include: { all: true } });
-    if (!p) throw new NotFoundException("Prescription not found");
-    return p;
+    const prescription = await this.prescriptionModel.findByPk(id, { include: { all: true } });
+    if (!prescription) throw new NotFoundException("Prescription not found");
+    return prescription;
   }
 
   async update(id: number, updatePrescriptionDto: UpdatePrescriptionDto) {
-    const p = await this.findOne(id);
-    return p.update(updatePrescriptionDto);
+    const prescription = await this.findOne(id);
+    return prescription.update(updatePrescriptionDto);
   }
 
   async remove(id: number) {
-    const p = await this.findOne(id);
-    await p.destroy();
+    const prescription = await this.findOne(id);
+    await prescription.destroy();
     return { message: "Prescription deleted" };
   }
 }

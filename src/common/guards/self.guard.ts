@@ -17,7 +17,6 @@ export class SelfGuard implements CanActivate {
     if (!paramId)
       throw new ForbiddenException("Invalid or missing resource ID");
 
-    // 🧩 Token bilan URL'dagi id ni solishtiramiz
     if (user.id !== paramId) {
       throw new ForbiddenException("Access denied — not your account");
     }

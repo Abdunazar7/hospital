@@ -26,10 +26,8 @@ export class UserAuthGuard implements CanActivate {
         secret: process.env.ACCESS_TOKEN_KEY,
       });
 
-      // foydalanuvchini yoki adminni requestga joylash
       req.user = decoded;
 
-      // admin tokenini tekshirish
       if (decoded.role === "ADMIN" && decoded.is_creator !== undefined) {
         if (!decoded.is_active)
           throw new ForbiddenException("Admin is not active");

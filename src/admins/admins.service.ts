@@ -24,7 +24,6 @@ export class AdminsService {
     private readonly jwtService: JwtService
   ) {}
 
-  // ✅ Tokenlar yaratish
   private async generateTokens(admin: Admin) {
     const payload = {
       id: admin.id,
@@ -48,7 +47,6 @@ export class AdminsService {
     return { accessToken, refreshToken };
   }
 
-  // ✅ CREATE (Admin qo‘shish)
   async create(dto: CreateAdminDto) {
     const existing = await this.adminModel.findOne({
       where: { email: dto.email },
@@ -74,7 +72,6 @@ export class AdminsService {
     return { message: "Admin created successfully", admin };
   }
 
-  // ✅ LOGIN
   async login(dto: LoginAdminDto, res: Response) {
     const admin = await this.adminModel.findOne({
       where: { email: dto.email },
@@ -96,7 +93,6 @@ export class AdminsService {
     return { message: "Login successful", accessToken, adminId: admin.id };
   }
 
-  // ✅ LOGOUT
   async logout(refreshToken: string, res: Response) {
     const adminData = await this.jwtService.verify(refreshToken, {
       secret: process.env.REFRESH_TOKEN_KEY,
@@ -112,7 +108,6 @@ export class AdminsService {
     return { message: "Logged out successfully" };
   }
 
-  // ✅ REFRESH TOKEN
   async refreshToken(adminId: number, refreshToken: string, res: Response) {
     const admin = await this.adminModel.findByPk(adminId);
     if (!admin) throw new NotFoundException("Admin not found");
@@ -137,12 +132,10 @@ export class AdminsService {
     return { message: "Token refreshed", accessToken };
   }
 
-  // ✅ READ ALL
   async findAll() {
     return this.adminModel.findAll({ include: { all: true } });
   }
 
-  // ✅ READ ONE
   async findOne(id: number) {
     const admin = await this.adminModel.findByPk(id, {
       include: { all: true },
@@ -151,7 +144,6 @@ export class AdminsService {
     return admin;
   }
 
-  // ✅ UPDATE
   async update(id: number, dto: UpdateAdminDto) {
     const [count, admins] = await this.adminModel.update(dto, {
       where: { id },
@@ -161,7 +153,6 @@ export class AdminsService {
     return { message: "Admin updated", admin: admins[0] };
   }
 
-  // ✅ DELETE
   async remove(id: number) {
     const deleted = await this.adminModel.destroy({ where: { id } });
     if (!deleted) throw new NotFoundException("Admin not found");

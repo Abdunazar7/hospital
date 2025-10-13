@@ -4,7 +4,7 @@ import { ReportsService } from "./reports.service";
 import { ReportsController } from "./reports.controller";
 
 @Module({
-  imports: [SequelizeModule.forFeature([])], // faqat raw querylar uchun
+  imports: [SequelizeModule.forFeature([])],
   controllers: [ReportsController],
   providers: [ReportsService],
 })

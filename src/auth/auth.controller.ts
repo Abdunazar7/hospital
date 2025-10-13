@@ -44,7 +44,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: "User Logout" })
-  // @UseGuards(UserAuthGuard)
+  @UseGuards(UserAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(
@@ -53,10 +53,9 @@ export class AuthController {
   ) {
     return this.authService.logout(refreshToken, res);
   }
-
+  
   @ApiOperation({ summary: "Refresh Access Token" })
-  // @UseGuards(UserAuthGuard, RolesGuard)
-  // @Roles(UserRole.ADMIN, UserRole.USER, UserRole.DOCTOR, UserRole.PATIENT)
+  @UseGuards(UserAuthGuard)
   @Post(":id/refresh")
   @HttpCode(HttpStatus.OK)
   refresh(
